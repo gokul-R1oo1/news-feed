@@ -27,6 +27,9 @@ pip
 gunicorn
 flask
 
+create virtual envroinment 
+- - - - - - - - - - - - - - - - 
+source venv/bin/activate
 - - - - - - - - - - - - - - - - 
 pip install -r requirements.txt
 - - - - - - - - - - - - - - - - 
