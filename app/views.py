@@ -1,13 +1,13 @@
-from app import app
-from flask import render_template
+from app import app 
+from flask import render_template, request, redirect, url_for, session
 from .request import businessArticles, entArticles, get_news_source, healthArticles, publishedArticles, randomArticles, scienceArticles, sportArticles, techArticles, topHeadlines
 
 @app.route('/')
 def home():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     articles = publishedArticles()
-
     return  render_template('home.html', articles = articles)
-
 @app.route('/headlines')
 def headlines():
     headlines = topHeadlines()
@@ -61,3 +61,19 @@ def health():
     sources = healthArticles()
 
     return  render_template('health.html', sources = sources)
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if username == 'admin' and password == 'admin*123':
+            # Store user session to indicate login status
+            session['logged_in'] = True
+            # Redirect to the home page after successful login
+            return redirect(url_for('home'))
+        else:
+            error = 'Invalid username or password. Please try again.'
+            return render_template('login.html', error=error)
+    else:
+        # Return the login form if the request method is not POST
+        return render_template('login.html', error=None)
